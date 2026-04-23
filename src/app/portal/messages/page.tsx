@@ -13,10 +13,7 @@ export default function MessagesPage() {
 
   const fetchMessages = useCallback(async (convId: string) => {
     const res = await fetch(`/api/messages?conversationId=${convId}`);
-    if (res.ok) {
-      const data = await res.json();
-      setMessages(data);
-    }
+    if (res.ok) setMessages(await res.json());
   }, []);
 
   useEffect(() => {
@@ -31,7 +28,6 @@ export default function MessagesPage() {
     init();
   }, [fetchMessages]);
 
-  // Poll for new messages every 3 seconds
   useEffect(() => {
     if (!conversation) return;
     const interval = setInterval(() => fetchMessages(conversation.id), 3000);
@@ -47,13 +43,11 @@ export default function MessagesPage() {
     setSending(true);
     const content = input.trim();
     setInput('');
-
     const res = await fetch('/api/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ conversationId: conversation.id, content }),
     });
-
     if (res.ok) {
       const msg: Message = await res.json();
       setMessages((prev) => [...prev, msg]);
@@ -61,69 +55,96 @@ export default function MessagesPage() {
     setSending(false);
   }
 
-  if (loading) {
-    return (
-      <div className="flex h-full items-center justify-center text-sm text-[#7a8194]">
-        Loading...
-      </div>
-    );
-  }
+  const lastMessage = messages[messages.length - 1];
 
   return (
-    <div className="flex h-full flex-col gap-0">
-      <div className="mb-6">
-        <p className="text-sm uppercase tracking-[0.35em] text-[#7a8194]">Messages</p>
-        <h1 className="mt-2 text-2xl font-semibold text-white">Caelus AI Team</h1>
-        <p className="text-xs text-[#7a8194]">Secure messaging</p>
-      </div>
+    <div className="flex h-full gap-4" style={{ minHeight: '72vh' }}>
 
-      <div className="flex min-h-0 flex-1 flex-col rounded-3xl border border-[#3d4352] bg-[#0d0f12] p-6">
-        <div className="flex flex-1 flex-col gap-3 overflow-y-auto pb-4">
-          {messages.length === 0 && (
-            <div className="rounded-3xl bg-[#11141a] p-4 text-sm leading-7 text-[#e8e8e5]">
-              <p className="text-xs text-[#7a8194]">Caelus AI Team</p>
-              <p className="mt-2">
-                Welcome to your Caelus client portal. Send a message to get started — we typically
-                respond within one business day.
+      {/* Conversation list */}
+      <aside className="w-[240px] shrink-0 rounded-2xl border border-[#2a2d36] bg-[#0d0f12] p-3">
+        <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-[0.3em] text-[#3d4352]">
+          Conversations
+        </p>
+        <button
+          className="w-full rounded-xl bg-[#1c1f26] px-4 py-4 text-left transition hover:bg-[#22252e]"
+        >
+          <p className="text-sm font-semibold text-[#f5f5f3]">Caelus AI Team</p>
+          <p className="mt-1 truncate text-xs text-[#7a8194]">
+            {loading
+              ? 'Loading...'
+              : lastMessage
+              ? lastMessage.content
+              : 'No messages yet'}
+          </p>
+        </button>
+      </aside>
+
+      {/* Message thread */}
+      <section className="flex flex-1 flex-col rounded-2xl border border-[#2a2d36] bg-[#0d0f12]">
+
+        {/* Thread header */}
+        <div className="border-b border-[#1e2128] px-6 py-4">
+          <p className="text-sm font-semibold text-[#f5f5f3]">Caelus AI Team</p>
+          <p className="text-xs text-[#3d4352]">Your support channel</p>
+        </div>
+
+        {/* Messages */}
+        <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-5">
+          {loading && (
+            <p className="text-xs text-[#3d4352]">Loading...</p>
+          )}
+          {!loading && messages.length === 0 && (
+            <div className="max-w-[70%] rounded-2xl bg-[#1c1f26] px-5 py-4">
+              <p className="mb-1 text-xs font-semibold text-[#c8ff3e]">Caelus AI Team</p>
+              <p className="text-sm leading-7 text-[#f5f5f3]">
+                Welcome to your client portal. Send us a message and we'll respond within one business day.
               </p>
             </div>
           )}
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`max-w-[75%] rounded-3xl p-4 text-sm leading-7 ${
-                msg.role === 'client'
-                  ? 'ml-auto bg-[#c8ff3e] text-[#0d0f12]'
-                  : 'bg-[#11141a] text-[#e8e8e5]'
-              }`}
+              className={`flex flex-col ${msg.role === 'client' ? 'items-end' : 'items-start'}`}
             >
-              {msg.role === 'owner' && (
-                <p className="mb-1 text-xs text-[#7a8194]">{msg.sender_name}</p>
-              )}
-              <p>{msg.content}</p>
+              <p className="mb-1 px-1 text-xs text-[#3d4352]">
+                {msg.role === 'client' ? 'You' : msg.sender_name}
+              </p>
+              <div
+                className={`max-w-[70%] rounded-2xl px-5 py-4 text-sm leading-7 ${
+                  msg.role === 'client'
+                    ? 'bg-[#c8ff3e] text-[#0d0f12]'
+                    : 'bg-[#1c1f26] text-[#f5f5f3]'
+                }`}
+              >
+                {msg.content}
+              </div>
             </div>
           ))}
           <div ref={bottomRef} />
         </div>
 
-        <div className="mt-4 flex gap-3 border-t border-[#3d4352] pt-4">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-            placeholder="Send a message..."
-            className="flex-1 rounded-2xl border border-[#3d4352] bg-[#0d0f12] px-4 py-3 text-sm text-white outline-none focus:border-[#c8ff3e]"
-          />
-          <button
-            onClick={sendMessage}
-            disabled={sending || !input.trim()}
-            className="rounded-2xl bg-[#c8ff3e] px-5 py-3 text-sm font-semibold text-[#0d0f12] transition hover:bg-[#a8ff6b] disabled:opacity-40"
-          >
-            Send
-          </button>
+        {/* Input */}
+        <div className="border-t border-[#1e2128] px-6 py-4">
+          <div className="flex gap-3">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder="Write a message..."
+              className="flex-1 rounded-xl border border-[#2a2d36] bg-[#1c1f26] px-4 py-3 text-sm text-[#f5f5f3] placeholder-[#3d4352] outline-none transition focus:border-[#c8ff3e]"
+            />
+            <button
+              onClick={sendMessage}
+              disabled={sending || !input.trim()}
+              className="rounded-xl bg-[#c8ff3e] px-5 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[#0d0f12] transition hover:bg-[#d9ff6e] disabled:opacity-40"
+            >
+              Send
+            </button>
+          </div>
         </div>
-      </div>
+
+      </section>
     </div>
   );
 }
