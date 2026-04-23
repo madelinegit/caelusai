@@ -13,7 +13,8 @@
       "PowerShell($env:PATH -split \";\" | ForEach-Object { $_ })",
       "Read(//c/Users/madel/AppData/Local/**)",
       "PowerShell(cmd /c \"where node 2>nul\")",
-      "PowerShell(cmd /c \"where npm 2>nul\")"
+      "PowerShell(cmd /c \"where npm 2>nul\")",
+      "Read(//c//**)"
     ]
   }
 }
