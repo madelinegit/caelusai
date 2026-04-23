@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C c:/Users/madel/caelusai remote -v)",
+      "Bash(git -C c:/Users/madel/caelusai remote add origin https://github.com/madelinegit/caelusai.git)",
+      "Bash(git -C c:/Users/madel/caelusai add .)",
+      "Bash(git -C c:/Users/madel/caelusai commit -m \"Initial scaffold: Next.js 15 + Clerk auth + client portal UI\")",
+      "Bash(git -C c:/Users/madel/caelusai branch -M main)",
+      "Bash(git -C c:/Users/madel/caelusai push -u origin main)"
+    ]
+  }
+}
