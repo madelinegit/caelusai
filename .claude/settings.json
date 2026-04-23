@@ -6,7 +6,14 @@
       "Bash(git -C c:/Users/madel/caelusai add .)",
       "Bash(git -C c:/Users/madel/caelusai commit -m \"Initial scaffold: Next.js 15 + Clerk auth + client portal UI\")",
       "Bash(git -C c:/Users/madel/caelusai branch -M main)",
-      "Bash(git -C c:/Users/madel/caelusai push -u origin main)"
+      "Bash(git -C c:/Users/madel/caelusai push -u origin main)",
+      "Bash(npm install *)",
+      "PowerShell(Get-Command node, npm, npx -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-ChildItem \"C:\\\\Program Files\\\\nodejs\\\\\" -ErrorAction SilentlyContinue; Get-ChildItem \"$env:APPDATA\\\\npm\\\\\" -ErrorAction SilentlyContinue | Select-Object -First 5; $env:PATH -split \";\" | Select-String \"node\")",
+      "PowerShell($env:PATH -split \";\" | ForEach-Object { $_ })",
+      "Read(//c/Users/madel/AppData/Local/**)",
+      "PowerShell(cmd /c \"where node 2>nul\")",
+      "PowerShell(cmd /c \"where npm 2>nul\")"
     ]
   }
 }
