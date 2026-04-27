@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { supabase } from '@/lib/supabase';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
-async function verifyAccess(userId: string, conversationId: string, isAdmin: boolean) {
+async function verifyAccess(supabase: SupabaseClient, userId: string, conversationId: string, isAdmin: boolean) {
   if (isAdmin) return true;
   const { data } = await supabase
     .from('conversations')
@@ -13,8 +13,8 @@ async function verifyAccess(userId: string, conversationId: string, isAdmin: boo
 }
 
 export async function GET(request: NextRequest) {
-  const authClient = await createClient();
-  const { data: { user } } = await authClient.auth.getUser();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const conversationId = request.nextUrl.searchParams.get('conversationId');
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const isAdmin = user.email === process.env.ADMIN_EMAIL;
 
-  if (!(await verifyAccess(user.id, conversationId, isAdmin))) {
+  if (!(await verifyAccess(supabase, user.id, conversationId, isAdmin))) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const authClient = await createClient();
-  const { data: { user } } = await authClient.auth.getUser();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const isAdmin = user.email === process.env.ADMIN_EMAIL;
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
   }
 
-  if (!(await verifyAccess(user.id, conversationId, isAdmin))) {
+  if (!(await verifyAccess(supabase, user.id, conversationId, isAdmin))) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
