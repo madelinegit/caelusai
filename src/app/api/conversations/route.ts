@@ -1,13 +1,13 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const authClient = await createClient();
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const user = await currentUser();
-  const isAdmin = user?.publicMetadata?.role === 'admin';
+  const isAdmin = user.email === process.env.ADMIN_EMAIL;
 
   if (isAdmin) {
     const { data, error } = await supabase
@@ -21,27 +21,24 @@ export async function GET() {
   const { data, error } = await supabase
     .from('conversations')
     .select('*')
-    .eq('client_id', userId)
+    .eq('client_id', user.id)
     .maybeSingle();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);
 }
 
 export async function POST() {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const authClient = await createClient();
+  const { data: { user } } = await authClient.auth.getUser();
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const user = await currentUser();
-  const name =
-    [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
-    user?.emailAddresses[0]?.emailAddress ||
-    'Client';
-  const email = user?.emailAddresses[0]?.emailAddress ?? '';
+  const email = user.email ?? '';
+  const name = (user.user_metadata?.full_name as string | undefined) || email.split('@')[0] || 'Client';
 
   const { data, error } = await supabase
     .from('conversations')
     .upsert(
-      { client_id: userId, client_name: name, client_email: email },
+      { client_id: user.id, client_name: name, client_email: email },
       { onConflict: 'client_id' }
     )
     .select()

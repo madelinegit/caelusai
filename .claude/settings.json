@@ -14,7 +14,12 @@
       "Read(//c/Users/madel/AppData/Local/**)",
       "PowerShell(cmd /c \"where node 2>nul\")",
       "PowerShell(cmd /c \"where npm 2>nul\")",
-      "Read(//c//**)"
+      "Read(//c//**)",
+      "Bash(git commit *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(xargs grep *)",
+      "Bash(npx next *)"
     ]
   }
 }

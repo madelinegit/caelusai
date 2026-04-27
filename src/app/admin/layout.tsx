@@ -1,12 +1,13 @@
-import { currentUser } from '@clerk/nextjs/server';
-import { UserButton } from '@clerk/nextjs';
-import Link from 'next/link';
+import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import SignOutButton from '@/components/SignOutButton';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const user = await currentUser();
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user || user.publicMetadata?.role !== 'admin') {
+  if (!user || user.email !== process.env.ADMIN_EMAIL) {
     redirect('/portal');
   }
 
@@ -24,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           </nav>
           <div className="mt-10 border-t border-[#3d4352] pt-6">
-            <UserButton afterSignOutUrl="/" />
+            <SignOutButton />
           </div>
         </aside>
 

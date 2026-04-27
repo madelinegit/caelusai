@@ -1,4 +1,4 @@
-import { UserButton } from '@clerk/nextjs';
+import SignOutButton from '@/components/SignOutButton';
 import Link from 'next/link';
 
 const navLinks = [
@@ -32,7 +32,7 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
           </nav>
 
           <div className="mt-auto border-t border-[#2a2d36] pt-5">
-            <UserButton afterSignOutUrl="/" />
+            <SignOutButton />
           </div>
         </aside>
 

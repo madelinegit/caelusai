@@ -1,4 +1,4 @@
-import { currentUser } from '@clerk/nextjs/server';
+import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 
 const metrics = [
@@ -13,8 +13,9 @@ const activity = [
 ];
 
 export default async function PortalHome() {
-  const user = await currentUser();
-  const firstName = user?.firstName || 'there';
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const firstName = user?.email?.split('@')[0] || 'there';
 
   return (
     <div className="space-y-10">
@@ -28,7 +29,7 @@ export default async function PortalHome() {
           Welcome back, {firstName}.
         </h1>
         <p className="mt-2 text-sm text-[#7a8194]">
-          Here's a summary of your workspace.
+          Here&apos;s a summary of your workspace.
         </p>
       </div>
 
