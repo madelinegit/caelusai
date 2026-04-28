@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <text
+    x="52"
+    y="83"
+    font-family="Arial Black, Helvetica Neue, sans-serif"
+    font-weight="900"
+    font-size="92"
+    fill="#c8ff3e"
+    stroke="#000000"
+    stroke-width="3"
+    stroke-linejoin="round"
+    text-anchor="middle"
+    paint-order="stroke fill"
+  >C</text>
+</svg>

@@ -5,6 +5,10 @@ export const metadata: Metadata = {
   title: 'Caelus AI by Ecodev LLC',
   description: 'Secure AI consulting and client portal by Ecodev LLC.',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/icon-192.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -12,8 +16,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head>
         <meta name="theme-color" content="#0d0f12" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body>{children}</body>
     </html>
