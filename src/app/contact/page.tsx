@@ -70,7 +70,7 @@ export default function Contact() {
           </form>
 
           <div className="mt-10 text-sm text-[#7a8194]">
-            <p>Prefer email? Reach us at <span className="text-[#f5f5f3]">hello@ecodev.ai</span>.</p>
+            <p>Prefer email? Reach us at <span className="text-[#f5f5f3]">ecodevwy@gmail.com</span>.</p>
             <p className="mt-3">
               Already a client?{' '}
               <Link href="/portal" className="text-[#c8ff3e] transition hover:text-[#d9ff6e]">
