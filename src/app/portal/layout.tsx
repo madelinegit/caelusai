@@ -1,5 +1,6 @@
 import SignOutButton from '@/components/SignOutButton';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 const navLinks = [
   { href: '/portal', label: 'Dashboard' },
@@ -15,8 +16,9 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
 
         {/* Sidebar */}
         <aside className="flex w-[220px] shrink-0 flex-col rounded-2xl border border-[#1e2128] bg-[#1c1f26] p-5">
-          <Link href="/" className="mb-8 text-sm font-semibold uppercase tracking-[0.15em]">
-            Caelus AI <span className="text-[#c8ff3e]">_</span>
+          <Link href="/" className="mb-8 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.15em]">
+            <Logo size={24} />
+            Caelus AI
           </Link>
 
           <nav className="flex flex-col gap-1 text-sm">

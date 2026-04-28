@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 const services = [
   {
@@ -26,8 +27,9 @@ export default function Services() {
       {/* Header */}
       <header className="border-b border-[#1e2128] px-8 py-5">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link href="/" className="text-sm font-semibold tracking-[0.15em] uppercase">
-            Caelus AI <span className="text-[#c8ff3e]">_</span>
+          <Link href="/" className="flex items-center gap-2 text-sm font-semibold tracking-[0.15em] uppercase">
+            <Logo size={26} />
+            Caelus AI
           </Link>
           <nav className="flex items-center gap-8 text-sm text-[#7a8194]">
             <Link href="/services" className="text-[#f5f5f3]">Services</Link>

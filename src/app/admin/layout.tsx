@@ -2,6 +2,7 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import SignOutButton from '@/components/SignOutButton';
+import Logo from '@/components/Logo';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -15,8 +16,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen bg-[#0d0f12] text-white">
       <div className="mx-auto flex min-h-screen max-w-7xl gap-6 px-4 py-6 xl:px-0">
         <aside className="w-full max-w-[280px] rounded-3xl border border-[#3d4352] bg-[#11141a] p-6">
-          <div className="mb-2 text-lg font-semibold text-white">
-            Caelus AI <span className="text-[#c8ff3e]">_</span>
+          <div className="mb-2 flex items-center gap-2 text-lg font-semibold text-white">
+            <Logo size={28} />
+            Caelus AI
           </div>
           <div className="mb-8 text-xs uppercase tracking-[0.25em] text-[#c8ff3e]">Admin</div>
           <nav className="space-y-3 text-sm text-[#e8e8e5]">
