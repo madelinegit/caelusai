@@ -58,7 +58,7 @@ export default function MessagesPage() {
   const lastMessage = messages[messages.length - 1];
 
   return (
-    <div className="flex h-full gap-4" style={{ minHeight: '72vh' }}>
+    <div className="flex h-full min-h-[72vh] gap-4">
 
       {/* Conversation list */}
       <aside className="w-[240px] shrink-0 rounded-2xl border border-[#2a2d36] bg-[#0d0f12] p-3">

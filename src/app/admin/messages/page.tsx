@@ -58,7 +58,7 @@ export default function AdminMessagesPage() {
   }
 
   return (
-    <div className="flex h-full gap-6" style={{ minHeight: '70vh' }}>
+    <div className="flex h-full min-h-[70vh] gap-6">
       {/* Conversation list */}
       <section className="w-[260px] shrink-0 rounded-3xl border border-[#3d4352] bg-[#0d0f12] p-4">
         <div className="mb-4 text-xs uppercase tracking-[0.35em] text-[#7a8194]">
@@ -138,7 +138,7 @@ export default function AdminMessagesPage() {
               <button
                 onClick={sendReply}
                 disabled={sending || !input.trim()}
-                className="rounded-2xl bg-[#c8ff3e] px-5 py-3 text-sm font-semibold text-[#0d0f12] transition hover:bg-[#a8ff6b] disabled:opacity-40"
+                className="rounded-2xl bg-[#c8ff3e] px-5 py-3 text-sm font-semibold text-[#0d0f12] transition hover:bg-[#d9ff6e] disabled:opacity-40"
               >
                 Send
               </button>

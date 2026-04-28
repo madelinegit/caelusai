@@ -33,7 +33,12 @@ export default function SignUpPage() {
 
   return (
     <main className="min-h-screen bg-[#0d0f12] text-white">
-      <div className="mx-auto flex min-h-screen max-w-3xl items-center justify-center px-6 py-24">
+      <div className="px-8 py-5">
+        <Link href="/" className="text-sm font-semibold uppercase tracking-[0.15em] text-[#f5f5f3]">
+          Caelus AI <span className="text-[#c8ff3e]">_</span>
+        </Link>
+      </div>
+      <div className="mx-auto flex min-h-[calc(100vh-60px)] max-w-3xl items-center justify-center px-6 py-12">
         <div className="w-full rounded-3xl border border-[#3d4352] bg-[#11141a] p-8 shadow-xl">
           <div className="mb-8">
             <p className="text-sm uppercase tracking-[0.35em] text-[#7a8194]">Client signup</p>
