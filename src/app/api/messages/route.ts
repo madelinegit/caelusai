@@ -73,7 +73,11 @@ export async function POST(request: NextRequest) {
 
   await supabase
     .from('conversations')
-    .update({ updated_at: new Date().toISOString() })
+    .update({
+      updated_at: new Date().toISOString(),
+      last_message_content: content.trim().substring(0, 120),
+      last_message_role: isAdmin ? 'owner' : 'client',
+    })
     .eq('id', conversationId);
 
   return NextResponse.json(data);

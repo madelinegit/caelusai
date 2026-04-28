@@ -3,6 +3,9 @@ export type Conversation = {
   client_id: string;
   client_name: string;
   client_email: string;
+  last_message_content?: string | null;
+  last_message_role?: 'client' | 'owner' | null;
+  notes?: string | null;
   created_at: string;
   updated_at: string;
 };

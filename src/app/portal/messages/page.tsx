@@ -9,6 +9,7 @@ export default function MessagesPage() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const fetchMessages = useCallback(async (convId: string) => {
@@ -18,12 +19,22 @@ export default function MessagesPage() {
 
   useEffect(() => {
     async function init() {
-      const res = await fetch('/api/conversations', { method: 'POST' });
-      if (!res.ok) return;
-      const conv: Conversation = await res.json();
-      setConversation(conv);
-      await fetchMessages(conv.id);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/conversations', { method: 'POST' });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({})) as { error?: string };
+          setError(body.error ?? `Error ${res.status}`);
+          setLoading(false);
+          return;
+        }
+        const conv: Conversation = await res.json();
+        setConversation(conv);
+        await fetchMessages(conv.id);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Network error');
+      } finally {
+        setLoading(false);
+      }
     }
     init();
   }, [fetchMessages]);
@@ -71,7 +82,9 @@ export default function MessagesPage() {
           <p className="text-sm font-semibold text-[#f5f5f3]">Caelus AI Team</p>
           <p className="mt-1 truncate text-xs text-[#7a8194]">
             {loading
-              ? 'Loading...'
+              ? 'Loading…'
+              : error
+              ? 'Unavailable'
               : lastMessage
               ? lastMessage.content
               : 'No messages yet'}
@@ -82,18 +95,22 @@ export default function MessagesPage() {
       {/* Message thread */}
       <section className="flex flex-1 flex-col rounded-2xl border border-[#2a2d36] bg-[#0d0f12]">
 
-        {/* Thread header */}
         <div className="border-b border-[#1e2128] px-6 py-4">
           <p className="text-sm font-semibold text-[#f5f5f3]">Caelus AI Team</p>
           <p className="text-xs text-[#3d4352]">Your support channel</p>
         </div>
 
-        {/* Messages */}
         <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-6 py-5">
           {loading && (
-            <p className="text-xs text-[#3d4352]">Loading...</p>
+            <p className="text-xs text-[#3d4352]">Loading…</p>
           )}
-          {!loading && messages.length === 0 && (
+          {error && (
+            <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
+              <p className="text-xs text-red-400">Could not load messages: {error}</p>
+              <p className="mt-1 text-xs text-[#7a8194]">Make sure your Supabase tables are set up. Contact support if this persists.</p>
+            </div>
+          )}
+          {!loading && !error && messages.length === 0 && (
             <div className="max-w-[70%] rounded-2xl bg-[#1c1f26] px-5 py-4">
               <p className="mb-1 text-xs font-semibold text-[#c8ff3e]">Caelus AI Team</p>
               <p className="text-sm leading-7 text-[#f5f5f3]">
@@ -123,7 +140,6 @@ export default function MessagesPage() {
           <div ref={bottomRef} />
         </div>
 
-        {/* Input */}
         <div className="border-t border-[#1e2128] px-6 py-4">
           <div className="flex gap-3">
             <input
@@ -131,15 +147,16 @@ export default function MessagesPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-              placeholder="Write a message..."
-              className="flex-1 rounded-xl border border-[#2a2d36] bg-[#1c1f26] px-4 py-3 text-sm text-[#f5f5f3] placeholder-[#3d4352] outline-none transition focus:border-[#c8ff3e]"
+              placeholder="Write a message…"
+              disabled={loading || !!error}
+              className="flex-1 rounded-xl border border-[#2a2d36] bg-[#1c1f26] px-4 py-3 text-sm text-[#f5f5f3] placeholder-[#3d4352] outline-none transition focus:border-[#c8ff3e] disabled:opacity-50"
             />
             <button
               onClick={sendMessage}
-              disabled={sending || !input.trim()}
+              disabled={sending || !input.trim() || loading || !!error}
               className="rounded-xl bg-[#c8ff3e] px-5 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[#0d0f12] transition hover:bg-[#d9ff6e] disabled:opacity-40"
             >
-              Send
+              {sending ? '…' : 'Send'}
             </button>
           </div>
         </div>

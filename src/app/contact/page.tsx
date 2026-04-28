@@ -15,7 +15,7 @@ export default function Contact() {
             <Link href="/about" className="transition hover:text-[#f5f5f3]">About</Link>
             <Link href="/contact" className="text-[#f5f5f3]">Contact</Link>
             <Link
-              href="/portal"
+              href="/sign-up"
               className="rounded-full bg-[#c8ff3e] px-5 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#0d0f12] transition hover:bg-[#d9ff6e]"
             >
               Client login
