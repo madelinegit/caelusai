@@ -83,7 +83,7 @@ export default function Services() {
 
       <footer className="border-t border-[#1e2128] px-8 py-5">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 text-xs text-[#3d4352] sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 Caelus AI. Operated by EcoDev LLC.</span>
+          <span>© 2026 Caelus AI. Operated by EcoDev LLC · 1309 Coffeen Avenue STE 1200, Sheridan, WY 82801</span>
           <div className="flex gap-5">
             <Link href="/legal/privacy" className="transition hover:text-[#7a8194]">Privacy</Link>
             <Link href="/legal/terms" className="transition hover:text-[#7a8194]">Terms</Link>
